@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VIP Restaurant offers a delightful dining experience with a diverse menu. Explore our dishes and place your order online!">
+    <meta name="keywords" content="restaurant, food, dining, menu, order online, VIP Restaurant">
+    <meta name="author" content="VIP Restaurant">
+    <title>siven Restaurant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Hero section animation */
+        @keyframes slideIn {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        .animate-slide-in {
+            animation: slideIn 1s ease-out forwards;
+        }
+
+        /* Nav link hover effect */
+        .nav-link:hover {
+            transform: scale(1.07);
+            transition: transform 0.3s ease;
+        }
+
+        /* Food image hover effect */
+        .food-img:hover {
+            transform: scale(1.06);
+            transition: transform 0.3s ease;
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .animate-on-scroll.delay-1 { transition-delay: 0.1s; }
+        .animate-on-scroll.delay-2 { transition-delay: 0.2s; }
+        .animate-on-scroll.delay-3 { transition-delay: 0.3s; }
+        .animate-on-scroll.delay-4 { transition-delay: 0.4s; }
+        .animate-on-scroll.delay-5 { transition-delay: 0.5s; }
+        .animate-on-scroll.delay-6 { transition-delay: 0.6s; }
+
+        /* Menu item card animation */
+        .menu-item-card.animate-on-scroll {
+            transform: translateY(50px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+
+        /* Gallery item card animation */
+        .gallery-item-card.animate-on-scroll {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .gallery-item-card.animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Hamburger menu styles */
+        #hamburgerBtn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            #hamburgerBtn {
+                display: block;
+            }
+            #navLinks {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: #b91c1c;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                padding: 1rem;
+            }
+            #navLinks.active {
+                display: flex;
+            }
+            #navLinks a, #navLinks button {
+                margin: 0.5rem 0;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 100;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-red-700 text-white p-4 sticky top-0 z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold animate-slide-in">VIP Restaurant</h1>
+            <button id="hamburgerBtn" class="md:hidden text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+            <div id="navLinks" class="flex space-x-4 items-center">
+                <a href="#home" class="hover:underline nav-link">Home</a>
+                <a href="#my-order" class="hover:underline nav-link">My Order</a>
+                <a href="#menu" class="hover:underline nav-link">Menu</a>
+                <a href="#order" class="hover:underline nav-link">Order</a>
+                <a href="#gallery" class="hover:underline nav-link">Gallery</a>
+                <button id="loginBtn" class="bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-200 nav-link">Login</button>
+                <button id="cartBtn" class="bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-200 nav-link">Cart (<span id="cartCount">0</span>)</button>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="relative h-screen bg-cover bg-center" style="background-image: url('https://plus.unsplash.com/premium_photo-1661953124283-76d0a8436b87?q=80&w=1488&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div class="container mx-auto h-full flex items-center justify-center">
+            <div class="text-center text-white">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 animate-slide-in">Welcome to VIP Restaurant</h2>
+                <p class="text-lg md:text-xl mb-6 animate-slide-in delay-1">Experience the finest dining with our exquisite menu</p>
+                <a href="#menu" class="bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700 animate-slide-in delay-2">Explore Menu</a>
+            </div>
+        </div>
+    </section>
+
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-full max-w-md animate-on-scroll is-visible">
+            <h2 class="text-2xl mb-4">Login</h2>
+            <form>
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input id="username" type="text" placeholder="Username" class="w-full p-2 mb-4 border rounded" aria-required="true">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input id="password" type="password" placeholder="Password" class="w-full p-2 mb-4 border rounded" aria-required="true">
+                <button id="submitLogin" type="button" class="bg-red-600 text-white px-4 py-2 rounded w-full hover:bg-red-700">Login</button>
+                <button id="closeLogin" type="button" class="mt-2 text-gray-600 underline w-full">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <section id="menu" class="py-16">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-8 animate-on-scroll">Our Menu</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <div class="bg-white p-4 rounded-lg shadow menu-item-card animate-on-scroll delay-1">
+                    <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?format=webp" class="w-full h-48 object-cover rounded food-img" loading="lazy" alt="Pastry Cake">
+                    <h3 class="text-xl font-semibold mt-4">Pastry Cake</h3>
+                    <p class="text-gray-600">Price: ₹450</p>
+                    <button class="add-to-cart bg-red-600 text-white px-4 py-2 mt-4 rounded hover:bg-red-700" data-item="Pastry Cake" data-price="450">Add to Cart</button>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow menu-item-card animate-on-scroll delay-2">
+                    <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?format=webp" class="w-full h-48 object-cover rounded food-img" loading="lazy" alt="Margherita Pizza">
+                    <h3 class="text-xl font-semibold mt-4">Margherita Pizza</h3>
+                    <p class="text-gray-600">Price: ₹350</p>
+                    <button class="add-to-cart bg-red-600 text-white px-4 py-2 mt-4 rounded hover:bg-red-700" data-item="Margherita Pizza" data-price="350">Add to Cart</button>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow menu-item-card animate-on-scroll delay-3">
+                    <img src="https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f?format=webp" class="w-full h-48 object-cover rounded food-img" loading="lazy" alt="Grilled Salmon">
+                    <h3 class="text-xl font-semibold mt-4">Grilled Salmon</h3>
+                    <p class="text-gray-600">Price: ₹300</p>
+                    <button class="add-to-cart bg-red-600 text-white px-4 py-2 mt-4 rounded hover:bg-red-700" data-item="Grilled Salmon" data-price="300">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="order" class="py-16 bg-gray-200">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-8 animate-on-scroll">Place Your Order</h2>
+            <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow animate-on-scroll delay-1">
+                <h3 class="text-xl font-semibold mb-4 animate-on-scroll delay-2">Delivery Location</h3>
+                <label for="location" class="block text-sm font-medium text-gray-700">Enter your address</label>
+                <input id="location" type="text" placeholder="Enter your address" class="w-full p-2 mb-4 border rounded animate-on-scroll delay-3" aria-required="true">
+                <h3 class="text-xl font-semibold mb-4 animate-on-scroll delay-4">Cart Summary</h3>
+                <div id="cartItems" class="mb-4 animate-on-scroll delay-5"></div>
+                <p class="text-lg font-semibold animate-on-scroll delay-6">Total Price: ₹<span id="cartTotal">0.00</span></p>
+                <button id="placeOrder" class="bg-red-600 text-white px-4 py-2 mt-4 rounded w-full hover:bg-red-700 animate-on-scroll delay-6">Place Order</button>
+            </div>
+        </div>
+    </section>
+
+     <section id="gallery" class="py-16">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-8 animate-on-scroll">Your Food Gallery</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.0s;">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Classic Burger</h3>
+                    <p class="text-gray-600">Price: ₹250</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.05s;">
+                    <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Pastry Cake</h3>
+                    <p class="text-gray-600">Price: ₹450</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.1s;">
+                    <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Margherita Pizza</h3>
+                    <p class="text-gray-600">Price: ₹350</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.15s;">
+                    <img src="https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Grilled Salmon</h3>
+                    <p class="text-gray-600">Price: ₹300</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.2s;">
+                    <img src="https://media.istockphoto.com/id/1500009791/photo/closeup-of-indian-style-spicy-chicken-curry.jpg?s=612x612&w=0&k=20&c=BppaWuJU2mXzAbUeA5bEq9_hIGro4C-YcGZCxQyNr-c=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Chicken Curry</h3>
+                    <p class="text-gray-600">Price: ₹200</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.25s;">
+                    <img src="https://media.istockphoto.com/id/1292618457/photo/healthy-and-tasty-veg-fried-rice-made-of-mixed-veggies-served-in-bowl-over-a-rustic-wooden.jpg?s=612x612&w=0&k=20&c=Q5Iw7QnM9Gsq-ZEM47RZwvXb1D43pV2YEan7QJkEz-E=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Veg Fried Rice</h3>
+                    <p class="text-gray-600">Price: ₹150</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.3s;">
+                    <img src="https://media.istockphoto.com/id/1345624358/photo/chicken-biriyani.jpg?s=612x612&w=0&k=20&c=2MV1W6UDjSqCalhqrfP6uUsQFxB_AyebNEK0atz0jMQ=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Chicken Biryani</h3>
+                    <p class="text-gray-600">Price: ₹250</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.35s;">
+                    <img src="https://images.unsplash.com/photo-1727018742095-14c9a05aa71a?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZGFhbHxlbnwwfHwwfHx8MA%3D%3D" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Dal Tadka</h3>
+                    <p class="text-gray-600">Price: ₹120</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.4s;">
+                    <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvb2R8ZW58MHx8MHx8fDA%3D" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Pancakes</h3>
+                    <p class="text-gray-600">Price: ₹180</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.45s;">
+                    <img src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YnJlYWtmYXN0fGVufDB8fHx8fA%3D%3D" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">French Toast</h3>
+                    <p class="text-gray-600">Price: ₹160</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.5s;">
+                    <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGZvb2R8ZW58MHx8MHx8fDA%3D" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Chocolate Cake</h3>
+                    <p class="text-gray-600">Price: ₹400</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.55s;">
+                    <img src="https://media.istockphoto.com/id/619060716/photo/basket-of-onion-rings.jpg?s=612x612&w=0&k=20&c=7cNQMrftwFeQXgJz-vLQSU9wpvC6Gex4KLYh-ME0MmU=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Onion Rings</h3>
+                    <p class="text-gray-600">Price: ₹100</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.6s;">
+                    <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Cheeseburger</h3>
+                    <p class="text-gray-600">Price: ₹280</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.65s;">
+                    <img src="https://images.unsplash.com/photo-1598515214211-89d3c73ae83b" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Sushi Platter</h3>
+                    <p class="text-gray-600">Price: ₹500</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.7s;">
+                    <img src="https://media.istockphoto.com/id/1338247051/photo/image-of-kadhai-style-serving-bowls-of-homemade-dal-makhani-curry-recipe-and-white-rice-plate.jpg?s=612x612&w=0&k=20&c=dFKW8lefTaAHqXMKixHd9WcEpOI5v0Czn0Yz6IYopu8=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Dal Makhani</h3>
+                    <p class="text-gray-600">Price: ₹140</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.75s;">
+                    <img src="https://images.unsplash.com/photo-1514326640560-7d063ef2aed5" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Pad Thai</h3>
+                    <p class="text-gray-600">Price: ₹220</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.8s;">
+                    <img src="https://media.istockphoto.com/id/2169821606/photo/basket-of-onion-rings.jpg?s=612x612&w=0&k=20&c=pqYikGjt4bpQTv8bvXREzngWlpdAN5kMBn3W-vhA39s=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Spicy Onion Rings</h3>
+                    <p class="text-gray-600">Price: ₹110</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.85s;">
+                    <img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c3dlZXR8ZW58MHx8MHx8fDA%3D" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">ice cream</h3>
+                    <p class="text-gray-600">Price: ₹80</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.9s;">
+                    <img src="https://images.unsplash.com/photo-1506224477000-07aa8a76be20?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3dlZXR8ZW58MHx8MHx8fDA%3D" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Rasgulla</h3>
+                    <p class="text-gray-600">Price: ₹90</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 0.95s;">
+                    <img src="https://media.istockphoto.com/id/1287073770/photo/indian-thali-selection-of-various-dishes-served-on-round-wooden-platter-assorted-indian.jpg?s=612x612&w=0&k=20&c=_jltlWDVHp0qMKhqsWGQROWhGDfXC7xOu19mvGIn-Fc=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2"> Sp. Indian Thali</h3>
+                    <p class="text-gray-600">Price: ₹300</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 1.0s;">
+                    <img src="https://media.istockphoto.com/id/1044079460/photo/indian-rasgulla-or-rosogulla-dessert-sweet-served-in-a-bowl-selective-focus.jpg?s=612x612&w=0&k=20&c=OETioMdM4axKIzoDAnPFiCXuqYzXNhDkRa2NcpV1DYw=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Rasgulla Bowl</h3>
+                    <p class="text-gray-600">Price: ₹100</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 1.05s;">
+                    <img src="https://media.istockphoto.com/id/1432847906/photo/kaju-katli-is-a-traditional-indian-diamond-shaped-sweet-or-mithai-made-using-cashew-paste.jpg?s=612x612&w=0&k=20&c=kSZoUZZKB4TA_eN6TC6JGXwRZXas5qMsv9Gn028tlyU=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Kaju Katri</h3>
+                    <p class="text-gray-600">Price: ₹150</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 1.1s;">
+                    <img src="https://media.istockphoto.com/id/657076158/photo/rajwari-or-rajwadi-sweet-kesar-badam-pista-kulfi-or-ice-cream-candy.jpg?s=612x612&w=0&k=20&c=p0eXjjHOxAawVv32t9a5WOWBEGT-XNMXxbiwtWg1Qs4=" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Kesar Kulfi</h3>
+                    <p class="text-gray-600">Price: ₹120</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 1.15s;">
+                    <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Veg Pizza</h3>
+                    <p class="text-gray-600">Price: ₹320</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow gallery-item-card animate-on-scroll" style="transition-delay: 1.2s;">
+                    <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187" class="w-full h-48 object-cover rounded food-img">
+                    <h3 class="text-lg font-semibold mt-2">Fruit Cake</h3>
+                    <p class="text-gray-600">Price: ₹420</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-red-600 text-white p-4">
+        <div class="container mx-auto text-center animate-on-scroll">
+            <p>© 2025 VIP Restaurant. All rights reserved.</p>
+            <p class="mt-2">Email: <a href="mailto:kanojiyasiven@gmail.com" class="underline">kanojiyasiven@gmail.com</a> | Phone: <a href="tel:+910123456789" class="underline">+91 0123456789</a></p>
+            <h2 class="text-lg mt-4">Thank you for visiting our website!</h2>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Cart functionality
+        let cart = [];
+        let cartTotal = 0;
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.getAttribute('data-item');
+                const price = parseFloat(button.getAttribute('data-price'));
+                cart.push({ item, price });
+                cartTotal += price;
+                updateCart();
+                showToast(`${item} added to cart!`);
+            });
+        });
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotalEl = document.getElementById('cartTotal');
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div class="flex justify-between mb-2">
+                    <span>${item.item}</span>
+                    <span>₹${item.price.toFixed(2)}</span>
+                    <button class="text-red-600 remove-item" data-index="${index}">Remove</button>
+                </div>
+            `).join('');
+            cartCount.textContent = cart.length;
+            cartTotalEl.textContent = cartTotal.toFixed(2);
+
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    const itemName = cart[index].item;
+                    cartTotal -= cart[index].price;
+                    cart.splice(index, 1);
+                    updateCart();
+                    showToast(`${itemName} removed from cart!`);
+                });
+            });
+        }
+
+        // Login modal
+        const loginModal = document.getElementById('loginModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const closeLogin = document.getElementById('closeLogin');
+        const submitLogin = document.getElementById('submitLogin');
+
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.remove('hidden');
+        });
+
+        closeLogin.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+        });
+
+        submitLogin.addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username && password) {
+                showToast(`Welcome, ${username}!`);
+                loginModal.classList.add('hidden');
+            } else {
+                showToast('Please enter username and password');
+            }
+        });
+
+        // Place order
+        document.getElementById('placeOrder').addEventListener('click', () => {
+            const location = document.getElementById('location').value;
+            if (cart.length === 0) {
+                showToast('Your cart is empty! Please add some items to order.');
+            } else if (location === '') {
+                showToast('Please enter a delivery location');
+            } else {
+                showToast(`Order placed successfully for ${location}! Total: ₹${cartTotal.toFixed(2)}`);
+                cart = [];
+                cartTotal = 0;
+                document.getElementById('location').value = '';
+                updateCart();
+            }
+        });
+
+        // Hamburger menu
+        document.getElementById('hamburgerBtn').addEventListener('click', () => {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        });
+
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+            elementsToAnimate.forEach(el => {
+                if (!el.closest('#home')) {
+                    observer.observe(el);
+                }
+            });
+
+            // Trigger hero section animations on load
+            document.querySelectorAll('#home .animate-slide-in').forEach(el => {
+                el.classList.add('is-visible');
+            });
+        });
+    </script>
+</body>
+</html>
